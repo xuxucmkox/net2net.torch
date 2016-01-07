@@ -17,6 +17,7 @@ end
 -- pos1 = position at which one has to widen the output
 -- pos2 = position at which the next weight layer is present
 -- newWidth   = new width of the layer
+
 n2n.wider = function(net, pos1, pos2, newWidth)
    batchnormWarning(net)
    local m1 = net:get(pos1)
@@ -26,10 +27,10 @@ n2n.wider = function(net, pos1, pos2, newWidth)
    local w2 = m2.weight
    local b1 = m1.bias
 
-   if torch.type(m1):find('SpatialConvolution') or torch.type(m1) == 'nn.Linear' then
+   if m1 is convolution or fully connected layer then
 
-      if torch.type(m1) == 'nn.SpatialConvolutionMM' then
-	 w1 = w1:view(w1:size(1), m1.nInputPlane, m1.kH, m1.kW)
+      if m1 is convolution then
+	 w1 = w1:view(w1:size(1), m1.input planes, kernelWidth, kernelHeight)
 	 w2 = w2:view(w2:size(1), m2.nInputPlane, m2.kH, m2.kW)
       end
 
